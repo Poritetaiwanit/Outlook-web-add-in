@@ -10,7 +10,7 @@
   <DisplayName DefaultValue="Send Confirmation"/>
   <Description DefaultValue="Shows recipients, domains, subject, and attachments before sending."/>
   <IconUrl DefaultValue="https://poritetaiwanit.github.io/Outlook-web-add-in/Porite logo-1.jpg"/>
-  <SupportUrl DefaultValue="https://poritetaiwanit.github.io/Outlook-web-add-in/support"/>
+  <SupportUrl DefaultValue="https://poritetaiwanit.github.io/Outlook-web-add-in"/>
 
   <AppDomains>
     <AppDomain>https://poritetaiwanit.github.io/Outlook-web-add-int</AppDomain>
@@ -42,4 +42,5 @@
   </Extensions>
 
 </OfficeApp>
+
 
