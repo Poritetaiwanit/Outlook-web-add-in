@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Send confirmation</title>
+  <link rel="stylesheet" href="/dialog/confirm.css"/>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <script src="confirm.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Confirm before sending</h2>
+    <section>
+      <h3>Subject</h3>
+      <div id="subject"></div>
+    </section>
+    <section>
+      <h3>Recipients</h3>
+      <div id="recipients"></div>
+    </section>
+    <section>
+      <h3>Attachments</h3>
+      <div id="attachments"></div>
+    </section>
+    <div class="actions">
+      <button id="btnSend">Send</button>
+      <button id="btnCancel" class="secondary">Cancel</button>
+    </div>
+  </div>
+</body>
+</html>
