@@ -9,11 +9,11 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Send Confirmation"/>
   <Description DefaultValue="Shows recipients, domains, subject, and attachments before sending."/>
-  <IconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-64.png"/>
-  <SupportUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/support"/>
+  <IconUrl DefaultValue="https://poritetaiwanit.github.io/Outlook-web-add-in/icon-64.png"/>
+  <SupportUrl DefaultValue="https://poritetaiwanit.github.io/Outlook-web-add-in/support"/>
 
   <AppDomains>
-    <AppDomain>https://ashy-smoke-03b7c5800.3.azurestaticapps.net</AppDomain>
+    <AppDomain>https://poritetaiwanit.github.io/Outlook-web-add-int</AppDomain>
   </AppDomains>
 
   <Permissions>ReadItem</Permissions>
@@ -37,7 +37,8 @@
       <LaunchEvents>
         <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler"/>
       </LaunchEvents>
-      <SourceLocation DefaultValue="https://yourdomain.com/events/onSend.html"/>
+      <SourceLocation DefaultValue="https://poritetaiwanit.github.io/Outlook-web-add-in/onSend.html"/>
     </ExtensionPoint>
   </Extensions>
+
 </OfficeApp>
