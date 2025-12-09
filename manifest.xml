@@ -9,7 +9,7 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Send Confirmation"/>
   <Description DefaultValue="Shows recipients, domains, subject, and attachments before sending."/>
-  <IconUrl DefaultValue="https://poritetaiwanit.github.io/Outlook-web-add-in/icon-64.png"/>
+  <IconUrl DefaultValue="https://poritetaiwanit.github.io/Outlook-web-add-in/Porite logo-1.jpg"/>
   <SupportUrl DefaultValue="https://poritetaiwanit.github.io/Outlook-web-add-in/support"/>
 
   <AppDomains>
@@ -42,3 +42,4 @@
   </Extensions>
 
 </OfficeApp>
+
