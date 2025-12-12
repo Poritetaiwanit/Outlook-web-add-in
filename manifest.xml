@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:mailapp="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
+  xsi:type="MailApp">
+
+  <Id>00000000-0000-0000-0000-000000000001</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Porite Taiwan</ProviderName>
+  <DefaultLocale>zh-tw</DefaultLocale>
+
+  <DisplayName DefaultValue="Porite - Smart Alerts 寄送前檢視"/>
+  <Description DefaultValue="寄送前顯示收件人、主旨、附件資訊"/>
+
+  <IconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/icon-128.png"/>
+  <SupportUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net"/>
+
+  <AppDomains>
+    <AppDomain>https://ashy-smoke-03b7c5800.3.azurestaticapps.net</AppDomain>
+  </AppDomains>
+
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.15"/>
+    </Sets>
+  </Requirements>
+
+  <FormSettings>
+    <Form xsi:type="ItemEdit">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/runtime.html"/>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+
+  <Permissions>ReadWriteItem</Permissions>
+
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit"/>
+  </Rule>
+
+  <mailapp:VersionOverrides xsi:type="mailapp:VersionOverridesV1_1">
+
+    <mailapp:Requirements>
+      <mailapp:Sets DefaultMinVersion="1.15">
+        <mailapp:Set Name="Mailbox"/>
+      </mailapp:Sets>
+    </mailapp:Requirements>
+
+    <mailapp:Hosts>
+      <mailapp:Host xsi:type="mailapp:Mailbox">
+
+        <mailapp:Runtimes>
+          <mailapp:Runtime resid="runtimeHtml" lifetime="long"/>
+        </mailapp:Runtimes>
+
+        <mailapp:DesktopFormFactor>
+          <mailapp:ExtensionPoint xsi:type="mailapp:LaunchEvent">
+            <mailapp:LaunchEvents>
+              <mailapp:LaunchEvent
+                Type="OnMessageSend"
+                FunctionName="onMessageSendHandler"
+                SendMode="PromptUser"/>
+            </mailapp:LaunchEvents>
+            <mailapp:SourceLocation resid="runtimeHtml"/>
+          </mailapp:ExtensionPoint>
+        </mailapp:DesktopFormFactor>
+
+      </mailapp:Host>
+    </mailapp:Hosts>
+
+    <mailapp:Resources>
+      <bt:Urls>
+        <bt:Url id="runtimeHtml" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/runtime.html"/>
+        <bt:Url id="runtimeJs"   DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/launchevent.js"/>
+      </bt:Urls>
+
+      <bt:Images>
+        <bt:Image id="Icon16"  DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/icon-16.png"/>
+        <bt:Image id="Icon32"  DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/icon-32.png"/>
+      </bt:Images>
+    </mailapp:Resources>
+
+  </mailapp:VersionOverrides>
+
+</OfficeApp>
