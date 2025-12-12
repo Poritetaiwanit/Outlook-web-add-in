@@ -1,0 +1,103 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
+  xsi:type="MailApp">
+
+  <!-- 基本資訊 -->
+  <Id>00000000-0000-0000-0000-000000000001</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Porite Taiwan</ProviderName>
+  <DefaultLocale>zh-tw</DefaultLocale>
+
+  <DisplayName DefaultValue="Porite - Smart Alerts 寄送前檢視"/>
+  <Description DefaultValue="按下寄信時以 Smart Alerts 顯示收件人網域/完整資訊、主旨與附件，並可選擇仍然寄出或不寄出"/>
+
+  <IconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net"/>
+
+  <AppDomains>
+    <AppDomain>https://ashy-smoke-03b7c5800.3.azurestaticapps.net</AppDomain>
+  </AppDomains>
+
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+
+  <!-- 建議的最低要求集：Mailbox 1.15（支援 Smart Alerts Markdown 等增強） -->
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.15"/>
+    </Sets>
+  </Requirements>
+
+  <!-- 權限：讀寫項目即可（讀主旨/收件人/附件） -->
+  <Permissions>ReadWriteItem</Permissions>
+
+  <!-- 啟用條件：Message/Appointment 撰寫 -->
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit"/>
+    <Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Edit"/>
+  </Rule>
+
+  <!-- VersionOverrides：Smart Alerts（LaunchEvent） -->
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
+                    xsi:type="VersionOverridesV1_1">
+
+    <Requirements>
+      <Sets DefaultMinVersion="1.15">
+        <Set Name="Mailbox"/>
+      </Sets>
+    </Requirements>
+
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-16.png"/>
+        <bt:Image id="Icon.32" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-32.png"/>
+        <bt:Image id="Icon.80" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-80.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <!-- Browser runtime（Web/Mac/new Outlook on Windows） -->
+        <bt:Url id="WebViewRuntime.Url" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/runtime.html"/>
+        <!-- JS-only runtime（classic Outlook on Windows） -->
+        <bt:Url id="JSRuntime.Url" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/launchevent.js"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="Button.Label" DefaultValue="寄送前檢視"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="Button.Tooltip" DefaultValue="寄送前檢視收件人與附件"/>
+      </bt:LongStrings>
+    </Resources>
+
+    <Hosts>
+      <Host xsi:type="Mailbox">
+        <!-- 宣告 runtimes（不同客戶端載入機制） -->
+        <Runtimes>
+          <Runtime resid="WebViewRuntime.Url">
+            <Override type="javascript" resid="JSRuntime.Url"/>
+          </Runtime>
+        </Runtimes>
+
+        <DesktopFormFactor>
+          <!-- 啟用 Smart Alerts 事件（OnMessageSend） -->
+          <ExtensionPoint xsi:type="LaunchEvent">
+            <LaunchEvents>
+              <!-- PromptUser：使用者可選擇仍然寄出或不寄出 -->
+              <LaunchEvent Type="OnMessageSend"
+                           FunctionName="onMessageSendHandler"
+                           SendMode="PromptUser"/>
+            </LaunchEvents>
+            <!-- 事件對應 runtime 資源 -->
+            <SourceLocation resid="WebViewRuntime.Url"/>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+  </VersionOverrides>
+</OfficeApp
