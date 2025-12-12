@@ -1,22 +1,21 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <OfficeApp
   xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
-  xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
-  xsi:type="MailApp">
+  xmlns:ov="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
+  xsi:type="TaskPaneApp">
 
   <Id>00000000-0000-0000-0000-000000000001</Id>
   <Version>1.0.0.0</Version>
   <ProviderName>Porite Taiwan</ProviderName>
-  <DefaultLocale>en-us</DefaultLocale>
+  <DefaultLocale>zh-tw</DefaultLocale>
 
-  <DisplayName DefaultValue="Porite - Smart Alerts Pre-Send Review"/>
-  <Description DefaultValue="Show recipient domains, full recipient info, subject, and attachments when the user clicks Send; the user can choose to send or cancel."/>
+  <DisplayName DefaultValue="Porite - Smart Alerts 寄送前檢視"/>
+  <Description DefaultValue="寄送前顯示收件人、主旨、附件資訊"/>
 
-  <IconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-64.png"/>
-  <HighResolutionIconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-128.png"/>
+  <IconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/icon-128.png"/>
   <SupportUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net"/>
 
   <AppDomains>
@@ -27,72 +26,44 @@
     <Host Name="Mailbox"/>
   </Hosts>
 
-  <!-- Mailbox requirement set: 1.15 enables Markdown in Smart Alerts -->
   <Requirements>
     <Sets>
       <Set Name="Mailbox" MinVersion="1.15"/>
     </Sets>
   </Requirements>
 
-  <Permissions>ReadWriteItem</Permissions>
+  <ov:VersionOverrides xsi:type="ov:VersionOverridesV1_1">
+    <ov:Requirements>
+      <ov:Sets DefaultMinVersion="1.15">
+        <ov:Set Name="Mailbox"/>
+      </ov:Sets>
+    </ov:Requirements>
 
-  <!-- Trigger only on compose forms -->
-  <Rule xsi:type="RuleCollection" Mode="Or">
-    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit"/>
-    <Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Edit"/>
-  </Rule>
+    <ov:Hosts>
+      <ov:Host xsi:type="ov:Mailbox">
+        <ov:Runtimes>
+          <ov:Runtime resid="RuntimeHTML" lifetime="long"/>
+        </ov:Runtimes>
+        <ov:DesktopFormFactor>
+          <ov:ExtensionPoint xsi:type="ov:LaunchEvent">
+            <ov:LaunchEvents>
+              <ov:LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="PromptUser"/>
+            </ov:LaunchEvents>
+            <ov:SourceLocation resid="RuntimeHTML"/>
+          </ov:ExtensionPoint>
+        </ov:DesktopFormFactor>
+      </ov:Host>
+    </ov:Hosts>
 
-  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
-                    xsi:type="VersionOverridesV1_1">
-
-    <Requirements>
-      <Sets DefaultMinVersion="1.15">
-        <Set Name="Mailbox"/>
-      </Sets>
-    </Requirements>
-
-    <Resources>
-      <bt:Images>
-        <bt:Image id="Icon.16" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-16.png"/>
-        <bt:Image id="Icon.32" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-32.png"/>
-        <bt:Image id="Icon.80" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-80.png"/>
-      </bt:Images>
+    <ov:Resources>
       <bt:Urls>
-        <!-- Browser runtime (web/Mac/new Outlook on Windows) -->
-        <bt:Url id="WebViewRuntime.Url" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/runtime.html"/>
-        <!-- JavaScript-only runtime (classic Outlook on Windows) -->
-        <bt:Url id="JSRuntime.Url" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/launchevent.js"/>
+        <bt:Url id="RuntimeHTML" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/runtime.html"/>
+        <bt:Url id="RuntimeJS" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/launchevent.js"/>
       </bt:Urls>
-      <bt:ShortStrings>
-        <bt:String id="Button.Label" DefaultValue="Pre-Send Review"/>
-      </bt:ShortStrings>
-      <bt:LongStrings>
-        <bt:String id="Button.Tooltip" DefaultValue="Review recipients and attachments before sending"/>
-      </bt:LongStrings>
-    </Resources>
-
-    <Hosts>
-      <Host xsi:type="Mailbox">
-        <!-- Smart Alerts runtime declaration -->
-        <Runtimes>
-          <Runtime resid="WebViewRuntime.Url">
-            <Override type="javascript" resid="JSRuntime.Url"/>
-          </Runtime>
-        </Runtimes>
-
-        <DesktopFormFactor>
-          <!-- Smart Alerts event -->
-          <ExtensionPoint xsi:type="LaunchEvent">
-            <LaunchEvents>
-              <!-- PromptUser: user can choose to Send anyway or Don't send -->
-              <LaunchEvent Type="OnMessageSend"
-                           FunctionName="onMessageSendHandler"
-                           SendMode="PromptUser"/>
-            </LaunchEvents>
-            <SourceLocation resid="WebViewRuntime.Url"/>
-          </ExtensionPoint>
-        </DesktopFormFactor>
-      </Host>
-    </Hosts>
-
-  </Version  </VersionOverrides>
+      <bt:Images>
+        <bt:Image id="Icon16" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/icon-16.png"/>
+        <bt:Image id="Icon32" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/icon-32.png"/>
+      </bt:Images>
+    </ov:Resources>
+  </ov:VersionOverrides>
+</OfficeApp>
