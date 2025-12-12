@@ -13,13 +13,13 @@
   <ProviderName>Porite Taiwan</ProviderName>
   <DefaultLocale>zh-tw</DefaultLocale>
 
-  <DisplayName DefaultValue="Porite - 寄送前檢視"/>
-  <Description DefaultValue="寄送前檢視收件人網域、完整資訊、主旨與附件；只能在您確認後才寄出"/>
+  <DisplayName DefaultValue="Porite - Smart Alerts 寄送前檢視"/>
+  <Description DefaultValue="按下寄信時以 Smart Alerts 顯示收件人網域/完整資訊、主旨與附件，並可選擇仍然寄出或不寄出"/>
+
   <IconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-128.png"/>
   <SupportUrl DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net"/>
 
-  <!-- 允許的導覽網域 -->
   <AppDomains>
     <AppDomain>https://ashy-smoke-03b7c5800.3.azurestaticapps.net</AppDomain>
   </AppDomains>
@@ -28,24 +28,14 @@
     <Host Name="Mailbox"/>
   </Hosts>
 
-  <!-- 要求集：撰寫模式讀附件需 1.8 -->
+  <!-- 建議的最低要求集：Mailbox 1.15（支援 Smart Alerts Markdown 等增強） -->
   <Requirements>
     <Sets>
-      <Set Name="Mailbox" MinVersion="1.8"/>
+      <Set Name="Mailbox" MinVersion="1.15"/>
     </Sets>
   </Requirements>
 
-  <!-- 舊客戶端相容（可留空頁）： -->
-  <FormSettings>
-    <Form xsi:type="ItemRead">
-      <DesktopSettings>
-        <SourceLocation DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/functions.html"/>
-        <RequestedHeight>300</RequestedHeight>
-      </DesktopSettings>
-    </Form>
-  </FormSettings>
-
-  <!-- 權限：讀寫項目即可 -->
+  <!-- 權限：讀寫項目即可（讀主旨/收件人/附件） -->
   <Permissions>ReadWriteItem</Permissions>
 
   <!-- 啟用條件：Message/Appointment 撰寫 -->
@@ -54,26 +44,28 @@
     <Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Edit"/>
   </Rule>
 
-  <!-- 1.1 版的 Outlook Mail VersionOverrides -->
+  <!-- VersionOverrides：Smart Alerts（LaunchEvent） -->
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
                     xsi:type="VersionOverridesV1_1">
 
     <Requirements>
-      <Sets DefaultMinVersion="1.8">
+      <Sets DefaultMinVersion="1.15">
         <Set Name="Mailbox"/>
       </Sets>
     </Requirements>
 
     <Resources>
-      <bt:Urls>
-        <bt:Url id="Functions.Url" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/functions.html"/>
-        <bt:Url id="Dialog.Url"    DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/dialog.html"/>
-      </bt:Urls>
       <bt:Images>
         <bt:Image id="Icon.16" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-16.png"/>
         <bt:Image id="Icon.32" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-32.png"/>
         <bt:Image id="Icon.80" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/assets/icon-80.png"/>
       </bt:Images>
+      <bt:Urls>
+        <!-- Browser runtime（Web/Mac/new Outlook on Windows） -->
+        <bt:Url id="WebViewRuntime.Url" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/runtime.html"/>
+        <!-- JS-only runtime（classic Outlook on Windows） -->
+        <bt:Url id="JSRuntime.Url" DefaultValue="https://ashy-smoke-03b7c5800.3.azurestaticapps.net/launchevent.js"/>
+      </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="Button.Label" DefaultValue="寄送前檢視"/>
       </bt:ShortStrings>
@@ -84,19 +76,28 @@
 
     <Hosts>
       <Host xsi:type="Mailbox">
-        <DesktopFormFactor>
-          <!-- 事件函式檔 -->
-          <FunctionFile resid="Functions.Url"/>
+        <!-- 宣告 runtimes（不同客戶端載入機制） -->
+        <Runtimes>
+          <Runtime resid="WebViewRuntime.Url">
+            <Override type="javascript" resid="JSRuntime.Url"/>
+          </Runtime>
+        </Runtimes>
 
-          <!-- on-send 事件（同步執行，可允許/阻擋送出） -->
-          <ExtensionPoint xsi:type="Events">
-            <Event Type="ItemSend"
-                   FunctionExecution="synchronous"
-                   FunctionName="onSendReview"/>
+        <DesktopFormFactor>
+          <!-- 啟用 Smart Alerts 事件（OnMessageSend） -->
+          <ExtensionPoint xsi:type="LaunchEvent">
+            <LaunchEvents>
+              <!-- PromptUser：使用者可選擇仍然寄出或不寄出 -->
+              <LaunchEvent Type="OnMessageSend"
+                           FunctionName="onMessageSendHandler"
+                           SendMode="PromptUser"/>
+            </LaunchEvents>
+            <!-- 事件對應 runtime 資源 -->
+            <SourceLocation resid="WebViewRuntime.Url"/>
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
     </Hosts>
+
   </VersionOverrides>
-</OfficeApp>
-``
+</OfficeApp
